@@ -8,6 +8,7 @@
     left: 0px;
     top: 0px;
     padding: 0px 0px;
+    z-index: 2147483647;
 }
 #translate_content_card_move{
     width: 100%;
@@ -18,6 +19,16 @@
     cursor: pointer;
     user-select: none;
     -webkit-user-select:none;
+}
+#translate_content_card_move>img{
+    width: 26px;
+    height: 26px;
+    margin: 2px;
+}
+#translate_content_card_move>span{
+    line-height: 30px;
+    position: absolute;
+    font-size: 12px;
 }
 #translate_content_card_content{
     padding: 4px 8px;

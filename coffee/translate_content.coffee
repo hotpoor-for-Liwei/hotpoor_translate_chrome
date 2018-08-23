@@ -1,12 +1,43 @@
 console.log "this is translate_demo.js"
 $ ->
+    hotpoor_translate_save = null
+    hotpoor_translate = (content,fromLan,toLan)->
+        clearTimeout hotpoor_translate_save
+        hotpoor_translate_save = setTimeout ()->
+            content_result = ""
+            $("#translate_content_card_content_aim").empty()
+            $("#translate_content_card_move_title").text "翻译中·Translating..."
+            $.ajax
+                url: "https://www.hotpoor.com/api/baiduai/translate"
+                data:
+                    content: content
+                    lan: fromLan
+                    to: toLan
+                dataType: 'json'
+                type: 'POST'
+                success: (data) ->
+                    console.log data
+                    if data.result?
+                        for result_i in data.result
+                            content_results = result_i["trans_result"]
+                            for result in content_results
+                                content_result = "#{content_result}#{result["dst"]}\n"
+                            $("#translate_content_card_content_aim").val(content_result)
+                    $("#translate_content_card_move_title").text "翻译·Translate"
+                error: (data)->
+                    console.log data
+                    $("#translate_content_card_move_title").text "翻译·Translate"
+        ,300
+
     $("body").append """
         <div id="translate_content_card">
             <div id="translate_content_card_move">
-                <img src="http://www.hotpoor.com/static/img/translate.png" style="width:30px;height:30px;">
+                <img src="https://www.hotpoor.com/static/img/translate.png"><span id="translate_content_card_move_title">翻译·Translate</span>
             </div>
             <div id="translate_content_card_tools" style="display:none"></div>
-            <div id="translate_content_card_content"></div>
+            <div id="translate_content_card_content">
+                <textarea id="translate_content_card_content_aim"></textarea>
+            </div>
         </div>"""
     translate_content_card_move = false
     translate_content_card_move_x = 0
@@ -39,5 +70,11 @@ $ ->
             else
                 translate_content_card_move = false
 
+    getWord= ()->
+        word = if window.getSelection then window.getSelection() else document.selection.createRange().text
+        return word
     $(window).on "mouseup",(e)->
         translate_content_card_move = false
+        translate_content = getWord().toString()
+        if translate_content.length>0
+            hotpoor_translate translate_content, "en", "zh"
