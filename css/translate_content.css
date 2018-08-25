@@ -1,12 +1,17 @@
+* {
+    outline: 0px solid transparent;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-touch-callout: none;
+}
 #translate_content_card{
     background: white;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-    width: 160px;
-    min-height: 100px;
+    width: 260px;
+    min-height: 160px;
     position: fixed;
-    left: 0px;
-    top: 0px;
+    right: 70px;
+    top: 80px;
     padding: 0px 0px;
     z-index: 2147483647;
 }
@@ -16,7 +21,7 @@
     background: #f2f2f2;
     padding: 0px 0px;
     border-radius: 4px 4px 2px 2px;
-    cursor: pointer;
+    cursor: move;
     user-select: none;
     -webkit-user-select:none;
 }
@@ -30,6 +35,25 @@
     position: absolute;
     font-size: 12px;
 }
+#translate_content_card_move_count{
+    right: 6px;
+}
 #translate_content_card_content{
-    padding: 4px 8px;
+    padding: 8px 10px;
+    max-height: 480px;
+    overflow-y: auto;
+}
+#translate_content_card_content>textarea{
+    width: 100%;
+    border: 0;
+    resize: none;
+    color: #777;
+    height: 100%;
+}
+#translate_content_card_content>div#translate_content_card_content_aim{
+    width: 100%;
+    border: 0;
+    resize: none;
+    color: #777;
+    height: 100%;
 }
