@@ -1,5 +1,13 @@
 console.log "this is translate_demo.js"
 $ ->
+    translate_content_card_show = false
+    isChina = (s)-> 
+        patrn=/[\u4E00-\u9FA5]|[\uFE30-\uFFA0]/gi
+        if not patrn.exec s
+            return false
+        else
+            return true
+
     hotpoor_translate_save = null
     hotpoor_translate = (content,fromLan,toLan)->
         clearTimeout hotpoor_translate_save
@@ -21,7 +29,9 @@ $ ->
                         for result_i in data.result
                             content_results = result_i["trans_result"]
                             for result in content_results
-                                content_result = """#{content_result}#{result["dst"]}<br>"""
+                                content_result = """#{content_result}
+                                    <div>#{result["dst"]}</div>
+                                    """
                             $("#translate_content_card_content_aim").html content_result
                             $("#translate_content_card_move_count").html """#{content_result.length}/1000"""
                     $("#translate_content_card_move_title").text "翻译·Translate"
@@ -31,7 +41,7 @@ $ ->
         ,300
 
     $("body").append """
-        <div id="translate_content_card">
+        <div id="translate_content_card" style="display:none;">
             <div id="translate_content_card_move">
                 <img src="https://www.hotpoor.com/static/img/translate.png">
                 <span id="translate_content_card_move_title">翻译·Translate</span>
@@ -66,6 +76,17 @@ $ ->
         translate_content_card_control = true
     $("body").on "mousedown", "#translate_content_card", (e)->
         translate_content_card_control = true
+
+    $("body").on "mouseup", "#translate_content_card_onoff", (e)->
+        console.log "body click translate_content_card_onoff hide"
+        $("#translate_content_card").show()
+        translate_content_card_show = true
+        mouse_x_now = e.clientX+5
+        mouse_y_now = e.clientY-10
+        $("#translate_content_card").css
+            "right":($(window).width()-mouse_x_now-260)+"px",
+            "top":mouse_y_now+"px",
+        $("#translate_content_card_onoff").remove()
     $(window).on "mousemove",(e)->
         if translate_content_card_move
             if e.which
@@ -87,22 +108,46 @@ $ ->
         word = if window.getSelection then window.getSelection() else document.selection.createRange().text
         return word
     latest_translate_content = null
-    $(window).on "mouseup",(e)->
-        if not translate_content_card_control
-            translate_content = getWord().toString()
-            console.log "=== 1"
-            console.log translate_content
-            console.log "=== 2"
-            if (translate_content is latest_translate_content) or (translate_content is "")
-                return
-            $("#translate_content_card_move_count").html """0/1000"""
-            translate_content_length = translate_content.length
-            if translate_content_length <= 2000
-                hotpoor_translate translate_content, "en", "zh"
-                latest_translate_content = translate_content
-            else if translate_content_length > 2000
-                $("#translate_content_card_content_aim").html "大哥大姐，内容太多翻得扛不住哟。<br>少一点吧~"
-                $("#translate_content_card_move_count").html """#{translate_content_length}/1000"""
+    
 
-        translate_content_card_control = false
-        translate_content_card_move = false
+    $(window).on "mouseup",(e)->
+        translate_content = getWord().toString()
+        console.log translate_content
+        console.log "translate_content ==="
+        if (translate_content isnt latest_translate_content) and (translate_content isnt "")
+            if translate_content_card_show
+                if not translate_content_card_control
+                    $("#translate_content_card_move_count").html """0/1000"""
+                    translate_content_length = translate_content.length
+                    if translate_content_length <= 2000
+                        if isChina(translate_content)
+                            hotpoor_translate translate_content, "zh", "en"
+                        else
+                            hotpoor_translate translate_content, "en", "zh"
+                        latest_translate_content = translate_content
+                    else if translate_content_length > 2000
+                        $("#translate_content_card_content_aim").html "大哥大姐，内容太多翻得扛不住哟。<br>少一点吧~"
+                        $("#translate_content_card_move_count").html """#{translate_content_length}/1000"""
+
+                translate_content_card_control = false
+                translate_content_card_move = false
+            else
+                translate_content_card_show = false
+                $("#translate_content_card_onoff").remove()
+                $("#translate_content_card").hide()
+                mouse_x_now = e.clientX+5
+                mouse_y_now = e.clientY-15
+                $("body").append """
+                    <div id="translate_content_card_onoff" style="left:#{mouse_x_now}px;top:#{mouse_y_now}px;">
+                        <img src="https://www.hotpoor.com/static/img/translate.png">
+                    </div>
+                """
+        else
+            translate_content_card_show = false
+            $("#translate_content_card_onoff").remove()
+            $("#translate_content_card").hide()
+            translate_content_card_control = false
+            translate_content_card_move = false
+            
+
+
