@@ -130,8 +130,6 @@
       return window_mouseup_later = setTimeout(function() {
         var mouse_x_now, mouse_y_now, translate_content, translate_content_length;
         translate_content = getWord().toString();
-        console.log(translate_content);
-        console.log("translate_content ===");
         if (translate_content !== "") {
           if (translate_content_card_show) {
             if (!translate_content_card_control) {
@@ -159,7 +157,8 @@
             $("#translate_content_card").hide();
             mouse_x_now = e.clientX;
             mouse_y_now = e.clientY - 15;
-            return $("body").append(`<div id="translate_content_card_onoff" style="left:${mouse_x_now}px;top:${mouse_y_now}px;">\n    <img src="https://www.hotpoor.com/static/img/translate.png">\n</div>`);
+            $("body").append(`<div id="translate_content_card_onoff" style="left:${mouse_x_now}px;top:${mouse_y_now}px;">\n    <img src="https://www.hotpoor.com/static/img/translate.png">\n</div>`);
+            return translate_content_card_move = false;
           }
         } else {
           translate_content_card_show = false;
@@ -168,7 +167,7 @@
           translate_content_card_control = false;
           return translate_content_card_move = false;
         }
-      }, 250);
+      }, 0);
     });
   });
 

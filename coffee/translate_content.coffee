@@ -114,8 +114,6 @@ $ ->
         clearTimeout window_mouseup_later
         window_mouseup_later = setTimeout ()->
             translate_content = getWord().toString()
-            console.log translate_content
-            console.log "translate_content ==="
             if translate_content isnt ""
                 if translate_content_card_show
                     if not translate_content_card_control
@@ -145,13 +143,11 @@ $ ->
                             <img src="https://www.hotpoor.com/static/img/translate.png">
                         </div>
                     """
+                    translate_content_card_move = false
             else
                 translate_content_card_show = false
                 $("#translate_content_card_onoff").remove()
                 $("#translate_content_card").hide()
                 translate_content_card_control = false
                 translate_content_card_move = false
-        ,250
-            
-
-
+        ,0
