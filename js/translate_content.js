@@ -3,7 +3,7 @@
   console.log("this is translate_demo.js");
 
   $(function() {
-    var getWord, hotpoor_translate, hotpoor_translate_save, isChina, latest_translate_content, mouse_move_x, mouse_move_y, mouse_x, mouse_y, translate_content_card_control, translate_content_card_move, translate_content_card_move_x, translate_content_card_move_y, translate_content_card_show;
+    var getWord, hotpoor_translate, hotpoor_translate_save, isChina, latest_translate_content, mouse_move_x, mouse_move_y, mouse_x, mouse_y, translate_content_card_control, translate_content_card_move, translate_content_card_move_x, translate_content_card_move_y, translate_content_card_show, window_mouseup_later;
     translate_content_card_show = false;
     isChina = function(s) {
       var patrn;
@@ -124,45 +124,49 @@
       return word;
     };
     latest_translate_content = null;
+    window_mouseup_later = null;
     return $(window).on("mouseup", function(e) {
-      var mouse_x_now, mouse_y_now, translate_content, translate_content_length;
-      translate_content = getWord().toString();
-      console.log(translate_content);
-      console.log("translate_content ===");
-      if ((translate_content !== latest_translate_content) && (translate_content !== "")) {
-        if (translate_content_card_show) {
-          if (!translate_content_card_control) {
-            $("#translate_content_card_move_count").html("0/1000");
-            translate_content_length = translate_content.length;
-            if (translate_content_length <= 2000) {
-              if (isChina(translate_content)) {
-                hotpoor_translate(translate_content, "zh", "en");
-              } else {
-                hotpoor_translate(translate_content, "en", "zh");
+      clearTimeout(window_mouseup_later);
+      return window_mouseup_later = setTimeout(function() {
+        var mouse_x_now, mouse_y_now, translate_content, translate_content_length;
+        translate_content = getWord().toString();
+        console.log(translate_content);
+        console.log("translate_content ===");
+        if ((translate_content !== latest_translate_content) && (translate_content !== "")) {
+          if (translate_content_card_show) {
+            if (!translate_content_card_control) {
+              $("#translate_content_card_move_count").html("0/1000");
+              translate_content_length = translate_content.length;
+              if (translate_content_length <= 2000) {
+                if (isChina(translate_content)) {
+                  hotpoor_translate(translate_content, "zh", "en");
+                } else {
+                  hotpoor_translate(translate_content, "en", "zh");
+                }
+                latest_translate_content = translate_content;
+              } else if (translate_content_length > 2000) {
+                $("#translate_content_card_content_aim").html("大哥大姐，内容太多翻得扛不住哟。<br>少一点吧~");
+                $("#translate_content_card_move_count").html(`${translate_content_length}/1000`);
               }
-              latest_translate_content = translate_content;
-            } else if (translate_content_length > 2000) {
-              $("#translate_content_card_content_aim").html("大哥大姐，内容太多翻得扛不住哟。<br>少一点吧~");
-              $("#translate_content_card_move_count").html(`${translate_content_length}/1000`);
             }
+            translate_content_card_control = false;
+            return translate_content_card_move = false;
+          } else {
+            translate_content_card_show = false;
+            $("#translate_content_card_onoff").remove();
+            $("#translate_content_card").hide();
+            mouse_x_now = e.clientX + 5;
+            mouse_y_now = e.clientY - 15;
+            return $("body").append(`<div id="translate_content_card_onoff" style="left:${mouse_x_now}px;top:${mouse_y_now}px;">\n    <img src="https://www.hotpoor.com/static/img/translate.png">\n</div>`);
           }
-          translate_content_card_control = false;
-          return translate_content_card_move = false;
         } else {
           translate_content_card_show = false;
           $("#translate_content_card_onoff").remove();
           $("#translate_content_card").hide();
-          mouse_x_now = e.clientX + 5;
-          mouse_y_now = e.clientY - 15;
-          return $("body").append(`<div id="translate_content_card_onoff" style="left:${mouse_x_now}px;top:${mouse_y_now}px;">\n    <img src="https://www.hotpoor.com/static/img/translate.png">\n</div>`);
+          translate_content_card_control = false;
+          return translate_content_card_move = false;
         }
-      } else {
-        translate_content_card_show = false;
-        $("#translate_content_card_onoff").remove();
-        $("#translate_content_card").hide();
-        translate_content_card_control = false;
-        return translate_content_card_move = false;
-      }
+      }, 200);
     });
   });
 
