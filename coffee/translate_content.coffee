@@ -81,8 +81,8 @@ $ ->
         console.log "body click translate_content_card_onoff hide"
         $("#translate_content_card").show()
         translate_content_card_show = true
-        mouse_x_now = e.clientX+5
-        mouse_y_now = e.clientY-10
+        mouse_x_now = e.clientX
+        mouse_y_now = e.clientY-15
         $("#translate_content_card").css
             "right":($(window).width()-mouse_x_now-260)+"px",
             "top":mouse_y_now+"px",
@@ -109,45 +109,45 @@ $ ->
         return word
     latest_translate_content = null
     
-
+    window_mouseup_later = null
     $(window).on "mouseup",(e)->
-        translate_content = getWord().toString()
-        console.log translate_content
-        console.log "translate_content ==="
-        if (translate_content isnt latest_translate_content) and (translate_content isnt "")
-            if translate_content_card_show
-                if not translate_content_card_control
-                    $("#translate_content_card_move_count").html """0/1000"""
-                    translate_content_length = translate_content.length
-                    if translate_content_length <= 2000
-                        if isChina(translate_content)
-                            hotpoor_translate translate_content, "zh", "en"
-                        else
-                            hotpoor_translate translate_content, "en", "zh"
-                        latest_translate_content = translate_content
-                    else if translate_content_length > 2000
-                        $("#translate_content_card_content_aim").html "大哥大姐，内容太多翻得扛不住哟。<br>少一点吧~"
-                        $("#translate_content_card_move_count").html """#{translate_content_length}/1000"""
+        clearTimeout window_mouseup_later
+        window_mouseup_later = setTimeout ()->
+            translate_content = getWord().toString()
+            if translate_content isnt ""
+                if translate_content_card_show
+                    if not translate_content_card_control
+                        if translate_content isnt latest_translate_content
+                            $("#translate_content_card_move_count").html """0/1000"""
+                            translate_content_length = translate_content.length
+                            if translate_content_length <= 2000
+                                if isChina(translate_content)
+                                    hotpoor_translate translate_content, "zh", "en"
+                                else
+                                    hotpoor_translate translate_content, "en", "zh"
+                                latest_translate_content = translate_content
+                            else if translate_content_length > 2000
+                                $("#translate_content_card_content_aim").html "大哥大姐，内容太多翻得扛不住哟。<br>少一点吧~"
+                                $("#translate_content_card_move_count").html """#{translate_content_length}/1000"""
 
-                translate_content_card_control = false
-                translate_content_card_move = false
+                    translate_content_card_control = false
+                    translate_content_card_move = false
+                else
+                    translate_content_card_show = false
+                    $("#translate_content_card_onoff").remove()
+                    $("#translate_content_card").hide()
+                    mouse_x_now = e.clientX+3
+                    mouse_y_now = e.clientY-15
+                    $("body").append """
+                        <div id="translate_content_card_onoff" style="left:#{mouse_x_now}px;top:#{mouse_y_now}px;">
+                            <img src="https://www.hotpoor.com/static/img/translate.png">
+                        </div>
+                    """
+                    translate_content_card_move = false
             else
                 translate_content_card_show = false
                 $("#translate_content_card_onoff").remove()
                 $("#translate_content_card").hide()
-                mouse_x_now = e.clientX+5
-                mouse_y_now = e.clientY-15
-                $("body").append """
-                    <div id="translate_content_card_onoff" style="left:#{mouse_x_now}px;top:#{mouse_y_now}px;">
-                        <img src="https://www.hotpoor.com/static/img/translate.png">
-                    </div>
-                """
-        else
-            translate_content_card_show = false
-            $("#translate_content_card_onoff").remove()
-            $("#translate_content_card").hide()
-            translate_content_card_control = false
-            translate_content_card_move = false
-            
-
-
+                translate_content_card_control = false
+                translate_content_card_move = false
+        ,0
