@@ -18,6 +18,15 @@
         img{
             height: 60px;
         }
+        .doc{
+            font-size: 12px;
+        }
+        .section{
+            display: flex;
+        }
+        .value>div{
+            min-width: 200px;
+        }
     </style>
     <script src="js/jquery-1.12.4.min.js"></script>
 </head>
@@ -26,5 +35,11 @@
     <div id="test">0</div>
     <button id="btn">点击</button>
     <script src="js/translate.js"></script>
+    <div class="doc">
+        <div class="section"><input type="" name="" class="key" value="" placeholder="请输入key值"><div class="value" contenteditable="true"></div></div>
+        <div class="section"><input type="" name="" class="key" value="" placeholder="请输入key值"><div class="value" contenteditable="true"></div></div>
+        <div class="section"><input type="" name="" class="key" value="" placeholder="请输入key值"><div class="value" contenteditable="true"></div></div>
+        <div class="section"><input type="" name="" class="key" value="" placeholder="请输入key值"><div class="value" contenteditable="true"></div></div>
+    </div>
 </body>
 </html>

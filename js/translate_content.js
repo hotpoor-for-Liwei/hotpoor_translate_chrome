@@ -89,8 +89,8 @@
       console.log("body click translate_content_card_onoff hide");
       $("#translate_content_card").show();
       translate_content_card_show = true;
-      mouse_x_now = e.clientX + 5;
-      mouse_y_now = e.clientY - 10;
+      mouse_x_now = e.clientX;
+      mouse_y_now = e.clientY - 15;
       $("#translate_content_card").css({
         "right": ($(window).width() - mouse_x_now - 260) + "px",
         "top": mouse_y_now + "px"
@@ -155,7 +155,7 @@
             translate_content_card_show = false;
             $("#translate_content_card_onoff").remove();
             $("#translate_content_card").hide();
-            mouse_x_now = e.clientX;
+            mouse_x_now = e.clientX + 3;
             mouse_y_now = e.clientY - 15;
             $("body").append(`<div id="translate_content_card_onoff" style="left:${mouse_x_now}px;top:${mouse_y_now}px;">\n    <img src="https://www.hotpoor.com/static/img/translate.png">\n</div>`);
             return translate_content_card_move = false;
