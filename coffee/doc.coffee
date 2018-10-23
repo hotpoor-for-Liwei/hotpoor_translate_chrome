@@ -61,7 +61,6 @@ $ ->
             $(".doc_main").append _dom
         if hotpoor_doc_list.length == 0
             _section = (new Date()).getTime()
-            _html 
             _dom = """
             <div class="section" data-line_number="#{_section}" contenteditable="true">
                 <div contenteditable="false" class="section_root">键入以开始</div>
@@ -78,7 +77,7 @@ $ ->
                 _section = (new Date()).getTime()
                 _html 
                 _dom = """
-                <div class="section" data-line_number="#{_section}" contenteditable="true">
+                <div class="section" data-line_number="#{_section}" contenteditable="true"><br>
                 </div>
                 """
                 $(".doc_main").append _dom
@@ -90,7 +89,43 @@ $ ->
             auto_save_doc_action()
         ,2000
     auto_save_doc_action()
+    lastEditRange = null
     $(".doc_main").on "click", ".section_root", (evt)->
         $(this).remove()
+    $(".doc_main").on "keydown",".section",(evt)->
+        this_section = $(this).data("line_number")
+        if evt.key is "Enter"
+            evt.stopPropagation()
+            evt.preventDefault()
+            _section = (new Date()).getTime()
+            _dom = """
+            <div class="section" data-line_number="#{_section}" contenteditable="true"><br>
+            </div>
+            """
+            $("[data-line_number=\"#{this_section}\"]").after _dom
+            $("[data-line_number=\"#{_section}\"]").focus()
+            return
+    $(".doc_main").on "keyup",".section",(evt)->
+        if evt.key is "Backspace"
+            if $(this).html()==""
+                $(this).remove()
+                console.log "光标应该回到上一行的最后一个位置"
+        console.log evt
+        # selection = getSelection()
+        # # 设置最后光标对象
+        # lastEditRange = selection.getRangeAt(0)
+        # console.log lastEditRange
+    $(".doc_main").on "mousedown", (evt)->
+        _section_now = null
+        _dom = evt.target
+        while not $(_dom).hasClass("section")
+            _dom = $(_dom).parent()
+        $(".section").removeClass("current_here")
+        $(_dom).addClass("current_here")
+    $(".doc_main").on "blur", (evt)->
+        $(".section").removeClass("current_here")
+
+
+
 
 

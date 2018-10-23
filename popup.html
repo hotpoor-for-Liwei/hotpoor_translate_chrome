@@ -24,13 +24,16 @@
         }
         .doc_main{
             padding: 10px;
+            outline: none;
         }
         .section{
             min-height: 14px;
             line-height: 16px;
-            margin-top: 5px;
-            margin-bottom: 5px;
             outline: none;
+            padding: 5px;
+        }
+        .current_here{
+            box-shadow: -3px 0px 0px #000;
         }
     </style>
     <script src="js/jquery-1.12.4.min.js"></script>
@@ -45,7 +48,7 @@
             <div class="doc_title"></div>
             <div class="doc_setting"></div>
         </div>
-        <div class="doc_main"></div>
+        <div class="doc_main" contenteditable="true"></div>
     </div>
 </body>
 </html>
